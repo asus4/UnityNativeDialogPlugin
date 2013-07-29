@@ -59,70 +59,98 @@ public class DialogManager : MonoBehaviour
 	private static extern int _showSubmitDialog (string msg);
 	[DllImport("__Internal")]
 	private static extern int _showSubmitTitleDialog (string title, string msg);
+	[DllImport("__Internal")]
+	private static extern void _dissmissDialog (int id);
 	#endif
 	
 	
 	
-	public void ShowSelectDialog (string msg, Action<bool> del)
+	public int ShowSelectDialog (string msg, Action<bool> del)
 	{
+		int id;
 		#if UNITY_EDITOR
-		
+		id = 0;
 		#elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            int id = cls.CallStatic<int>("ShowSelectDialog", msg);
+            id = cls.CallStatic<int>("ShowSelectDialog", msg);
 			_delegates.Add(id, del);
         }	
 		#elif UNITY_IPHONE
-			int id = _showSelectDialog(msg);
+			id = _showSelectDialog(msg);
 			_delegates.Add(id, del);
 		#endif
+		return id;
 	}
 	
-	public void ShowSelectDialog (string title, string msg, Action<bool> del)
+	public int ShowSelectDialog (string title, string msg, Action<bool> del)
 	{
+		int id;
 		#if UNITY_EDITOR
-		
+		id = 0;
 		#elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            int id = cls.CallStatic<int>("ShowSelectTitleDialog", title, msg);
+            id = cls.CallStatic<int>("ShowSelectTitleDialog", title, msg);
 			_delegates.Add(id, del);
         }	
 		#elif UNITY_IPHONE
-			int id = _showSelectTitleDialog(title, msg);
+			id = _showSelectTitleDialog(title, msg);
 			_delegates.Add(id, del);
 		#endif
+		return id;
 	}
 	
-	public void ShowSubmitDialog (string msg, Action<bool> del)
+	public int ShowSubmitDialog (string msg, Action<bool> del)
 	{
+		int id;
+		#if UNITY_EDITOR
+		id = 0;
+		#elif UNITY_ANDROID
+		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
+            id = cls.CallStatic<int>("ShowSubmitDialog", msg);
+			_delegates.Add(id, del);
+        }
+		#elif UNITY_IPHONE
+			id = _showSubmitDialog(msg);
+			_delegates.Add(id, del);
+		#endif
+		return id;
+	}
+	
+	public int ShowSubmitDialog (string title, string msg, Action<bool> del)
+	{
+		int id;
+		#if UNITY_EDITOR
+		id = 0;
+		#elif UNITY_ANDROID
+		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
+            id = cls.CallStatic<int>("ShowSubmitTitleDialog", title, msg);
+			_delegates.Add(id, del);
+        }
+		#elif UNITY_IPHONE
+			id = _showSubmitTitleDialog(title, msg);
+			_delegates.Add(id, del);
+		#endif
+		return id;
+	}
+	
+	public void DissmissDialog(int id) {
 		#if UNITY_EDITOR
 		
 		#elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            int id = cls.CallStatic<int>("ShowSubmitDialog", msg);
-			_delegates.Add(id, del);
+            cls.CallStatic("DissmissDialog", id);
         }
 		#elif UNITY_IPHONE
-			int id = _showSubmitDialog(msg);
-			_delegates.Add(id, del);
+			_dissmissDialog(id);
 		#endif
-	}
-	
-	public void ShowSubmitDialog (string title, string msg, Action<bool> del)
-	{
-		#if UNITY_EDITOR
 		
-		#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            int id = cls.CallStatic<int>("ShowSubmitTitleDialog", title, msg);
-			_delegates.Add(id, del);
-        }
-		#elif UNITY_IPHONE
-			int id = _showSubmitTitleDialog(title, msg);
-			_delegates.Add(id, del);
-		#endif
-	}
-	
+		if(_delegates.ContainsKey(id)) {
+			_delegates [id] (false);
+			_delegates.Remove (id);
+		} else {
+			Debug.LogWarning ("undefined id:" + id);
+		}
+	}	
 	
 	#region Invoked from Native Plugin
 	public void OnSubmit (string idStr)

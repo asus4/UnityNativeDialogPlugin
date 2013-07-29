@@ -10,10 +10,12 @@
 
 @interface UNDialogManager : NSObject<UIAlertViewDelegate> {
     int _id;
+    NSMutableDictionary *alerts;
 }
 + (UNDialogManager*) sharedManager;
 - (int) showSelectDialog:(NSString *)msg;
 - (int) showSelectDialog:(NSString *)title message:(NSString*)msg;
 - (int) showSubmitDialog:(NSString *)msg;
 - (int) showSubmitDialog:(NSString *)title message:(NSString*)msg;
+- (void) dissmissDialog:(int) theID;
 @end

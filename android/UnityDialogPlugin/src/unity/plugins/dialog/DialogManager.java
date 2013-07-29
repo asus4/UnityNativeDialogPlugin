@@ -3,6 +3,7 @@ package unity.plugins.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.SparseArray;
 
 import com.unity3d.player.UnityPlayer;
 
@@ -13,12 +14,15 @@ import com.unity3d.player.UnityPlayer;
 public class DialogManager {
 	private static DialogManager _instance;
 	
-	private int _id = 0;
+	private int _id;
+	private SparseArray<AlertDialog> _dialogs;
 	
 	/**
 	 * singleton class 
 	 */
 	private DialogManager() {
+		_id = 0;
+		_dialogs = new SparseArray<AlertDialog>();
 	}
 	
 	public static DialogManager getInstance() {
@@ -35,33 +39,37 @@ public class DialogManager {
 	public int showSelectDialog(final String msg) {
 		++_id;
 		
+		final int id = _id; 
 		final Activity a = UnityPlayer.currentActivity;
 		a.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						log("submit " + _id + ":" + msg);
-						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(_id));
+						log("submit " + id + ":" + msg);
+						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(id));
+						_dialogs.delete(id);
 					}
 				};
 				
 				DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						log("defuse " + _id + ":" + msg);
-						UnityPlayer.UnitySendMessage("DialogManager", "OnCancel", String.valueOf(_id));
+						log("defuse " + id + ":" + msg);
+						UnityPlayer.UnitySendMessage("DialogManager", "OnCancel", String.valueOf(id));
+						_dialogs.delete(id);
 					}
 				};
 				
-				
-				new AlertDialog.Builder(a)
+				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setMessage(msg)
 				.setNegativeButton("いいえ", negativeListener)
 				.setPositiveButton("はい", positiveListener)
 				.show();
+				
+				_dialogs.put(Integer.valueOf(id), dialog);
 			}
 		});
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -72,34 +80,39 @@ public class DialogManager {
 	public int showSelectDialog(final String title, final String msg) {
 		++_id;
 		
+		final int id = _id;
 		final Activity a = UnityPlayer.currentActivity;
 		a.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						log("submit " + _id + ":" + msg);
-						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(_id));
+						log("submit " + id + ":" + msg);
+						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(id));
+						_dialogs.delete(id);
 					}
 				};
 				
 				DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						log("defuse " + _id + ":" + msg);
-						UnityPlayer.UnitySendMessage("DialogManager", "OnCancel", String.valueOf(_id));
+						log("defuse " + id + ":" + msg);
+						UnityPlayer.UnitySendMessage("DialogManager", "OnCancel", String.valueOf(id));
+						_dialogs.delete(id);
 					}
 				};
 				
-				new AlertDialog.Builder(a)
+				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setTitle(title)
 				.setMessage(msg)
 				.setNegativeButton("いいえ", negativeListener)
 				.setPositiveButton("はい", positiveListener)
 				.show();
+				
+				_dialogs.put(Integer.valueOf(id), dialog);
 			}
 		});
 		
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -109,25 +122,29 @@ public class DialogManager {
 	public int showSubmitDialog(final String msg) {
 		++_id;
 		
+		final int id = _id;
 		final Activity a = UnityPlayer.currentActivity;
 		a.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						log("submit " + _id + ":" + msg);
-						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(_id));
+						log("submit " + id + ":" + msg);
+						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(id));
+						_dialogs.remove(id);
 					}
 				};
 				
-				new AlertDialog.Builder(a)
+				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setMessage(msg)
 				.setPositiveButton("閉じる", positiveListener)
 				.show();
+				
+				_dialogs.put(Integer.valueOf(id), dialog);
 			}
 		});
 		
-		return _id;
+		return id;
 	}
 	
 	/**
@@ -138,27 +155,39 @@ public class DialogManager {
 	public int showSubmitDialog(final String title, final String msg) {
 		++_id;
 		
+		final int id = _id;
 		final Activity a = UnityPlayer.currentActivity;
 		a.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						log("submit " + _id + ":" + msg);
-						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(_id));
+						log("submit " + id + ":" + msg);
+						UnityPlayer.UnitySendMessage("DialogManager", "OnSubmit", String.valueOf(id));
+						_dialogs.remove(id);
 					}
 				};
 				
-				new AlertDialog.Builder(a)
+				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setTitle(title)
 				.setMessage(msg)
 				.setPositiveButton("閉じる", positiveListener)
 				.show();
-			
+				
+				_dialogs.put(Integer.valueOf(id), dialog);
 			}
 		});
 		
-		return _id;
+		return id;
+	}
+	
+	public void dissmissDialog(int id) {
+		AlertDialog dialog = _dialogs.get(id);
+		if(dialog == null) {
+			return;
+		}
+		dialog.dismiss();
+		_dialogs.remove(id);
 	}
 	
 	/**
@@ -197,6 +226,10 @@ public class DialogManager {
 	 */
 	public static int ShowSubmitTitleDialog(String title, String msg) {
 		return DialogManager.getInstance().showSubmitDialog(title, msg);
+	}
+	
+	public static void DissmissDialog(int id) {
+		DialogManager.getInstance().dissmissDialog(id);
 	}
 	
 	private void log(String msg) {

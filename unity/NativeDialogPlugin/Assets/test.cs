@@ -24,6 +24,16 @@ public class test : MonoBehaviour {
 				Debug.Log ("ddd");
 			});
 		}
+		if(GUILayout.Button("eee auto dissmiss", GUILayout.MinWidth(200), GUILayout.MinHeight(100))) {
+			int id = DialogManager.Instance.ShowSelectDialog("eee", (bool result) => {
+				Debug.Log("eee"+result);
+			});
+			StartCoroutine(dissmiss(id, 3f));
+		}
 	}
 	
+	IEnumerator dissmiss (int id, float time) {
+		yield return new WaitForSeconds (time);
+		DialogManager.Instance.DissmissDialog (id);
+	}
 }
