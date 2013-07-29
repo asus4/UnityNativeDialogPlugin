@@ -1,0 +1,29 @@
+using UnityEngine;
+using System.Collections;
+
+public class test : MonoBehaviour {
+
+	void OnGUI() {
+		if(GUILayout.Button("aaa", GUILayout.MinWidth(200), GUILayout.MinHeight(100))) {
+			DialogManager.Instance.ShowSelectDialog("aaa", (bool result) => {
+				Debug.Log("aaa"+result);
+			});
+		}
+		if(GUILayout.Button("bbb", GUILayout.MinWidth(200), GUILayout.MinHeight(100))) {
+			DialogManager.Instance.ShowSelectDialog("b title" ,"bbb", (bool result) => {
+				Debug.Log("bbb"+result);
+			});
+		}
+		if(GUILayout.Button("ccc", GUILayout.MinWidth(200), GUILayout.MinHeight(100))) {
+			DialogManager.Instance.ShowSubmitDialog("ccc", (bool result) => {
+				Debug.Log ("ccc");
+			});
+		}
+		if(GUILayout.Button("ddd", GUILayout.MinWidth(200), GUILayout.MinHeight(100))) {
+			DialogManager.Instance.ShowSubmitDialog("d title", "ddd", (bool result) => {
+				Debug.Log ("ddd");
+			});
+		}
+	}
+	
+}
