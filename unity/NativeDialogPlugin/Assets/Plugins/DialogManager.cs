@@ -31,6 +31,8 @@ public class DialogManager : MonoBehaviour
 	void Awake ()
 	{
 		_delegates = new Dictionary<int, Action<bool>> ();
+		// set default label
+		SetLabel("YES", "NO", "CLOSE");
 	}
 	
 	void OnDestroy ()
@@ -61,6 +63,8 @@ public class DialogManager : MonoBehaviour
 	private static extern int _showSubmitTitleDialog (string title, string msg);
 	[DllImport("__Internal")]
 	private static extern void _dissmissDialog (int id);
+	[DllImport("__Internal")]
+	private static extern void _setLabel(string decide, string cancel, string close);
 	#endif
 	
 	
@@ -150,7 +154,21 @@ public class DialogManager : MonoBehaviour
 		} else {
 			Debug.LogWarning ("undefined id:" + id);
 		}
-	}	
+	}
+	
+	public void SetLabel(string decide, string cancel, string close) {
+		
+		#if UNITY_EDITOR
+		
+		#elif UNITY_ANDROID
+		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
+            cls.CallStatic("SetLabel", decide, cancel, close);
+        }
+		#elif UNITY_IPHONE
+			_setLabel(decide, cancel, close);
+		#endif
+		
+	}
 	
 	#region Invoked from Native Plugin
 	public void OnSubmit (string idStr)

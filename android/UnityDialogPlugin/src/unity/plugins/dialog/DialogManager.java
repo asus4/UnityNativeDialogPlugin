@@ -17,12 +17,19 @@ public class DialogManager {
 	private int _id;
 	private SparseArray<AlertDialog> _dialogs;
 	
+	private String decideLabel;
+	private String cancelLabel;
+	private String closeLabel;
+	
 	/**
 	 * singleton class 
 	 */
 	private DialogManager() {
 		_id = 0;
 		_dialogs = new SparseArray<AlertDialog>();
+		decideLabel = "Yes";
+		cancelLabel = "No";
+		closeLabel = "Close";
 	}
 	
 	public static DialogManager getInstance() {
@@ -62,8 +69,8 @@ public class DialogManager {
 				
 				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setMessage(msg)
-				.setNegativeButton("いいえ", negativeListener)
-				.setPositiveButton("はい", positiveListener)
+				.setNegativeButton(cancelLabel, negativeListener)
+				.setPositiveButton(decideLabel, positiveListener)
 				.show();
 				
 				_dialogs.put(Integer.valueOf(id), dialog);
@@ -104,8 +111,8 @@ public class DialogManager {
 				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setTitle(title)
 				.setMessage(msg)
-				.setNegativeButton("いいえ", negativeListener)
-				.setPositiveButton("はい", positiveListener)
+				.setNegativeButton(cancelLabel, negativeListener)
+				.setPositiveButton(decideLabel, positiveListener)
 				.show();
 				
 				_dialogs.put(Integer.valueOf(id), dialog);
@@ -137,7 +144,7 @@ public class DialogManager {
 				
 				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setMessage(msg)
-				.setPositiveButton("閉じる", positiveListener)
+				.setPositiveButton(closeLabel, positiveListener)
 				.show();
 				
 				_dialogs.put(Integer.valueOf(id), dialog);
@@ -171,7 +178,7 @@ public class DialogManager {
 				AlertDialog dialog = new AlertDialog.Builder(a)
 				.setTitle(title)
 				.setMessage(msg)
-				.setPositiveButton("閉じる", positiveListener)
+				.setPositiveButton(closeLabel, positiveListener)
 				.show();
 				
 				_dialogs.put(Integer.valueOf(id), dialog);
@@ -188,6 +195,12 @@ public class DialogManager {
 		}
 		dialog.dismiss();
 		_dialogs.remove(id);
+	}
+	
+	public void setLabel(String decide, String cancel, String close) {
+		this.decideLabel = decide;
+		this.cancelLabel = cancel;
+		this.closeLabel = close;
 	}
 	
 	/**
@@ -230,6 +243,10 @@ public class DialogManager {
 	
 	public static void DissmissDialog(int id) {
 		DialogManager.getInstance().dissmissDialog(id);
+	}
+	
+	public static void SetLabel(String decide, String cancel, String close) {
+		DialogManager.getInstance().setLabel(decide, cancel, close);
 	}
 	
 	private void log(String msg) {

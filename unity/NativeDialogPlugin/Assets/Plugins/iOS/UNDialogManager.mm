@@ -38,6 +38,13 @@ extern "C" {
     void _dissmissDialog(const int theID){
         [[UNDialogManager sharedManager] dissmissDialog:theID];
     }
+
+    void _setLabel(const char *decide, const char *cancel, const char *close) {
+        [[UNDialogManager sharedManager] 
+            setLabelTitleWithDecide:[NSString stringWithUTF8String:decide]
+                             cancel:[NSString stringWithUTF8String:cancel]
+                              close:[NSString stringWithUTF8String:close]];
+    }
 }
 
 
@@ -58,11 +65,20 @@ static UNDialogManager * shardDialogManager;
 - (id) init {
     alerts = [NSMutableDictionary dictionary];
     [alerts retain];
+
     return [super init];
 }
 
+- (void) dealloc {
+    [decideLabel release];
+    [cancelLabel release];
+    [closeLabel release];
+    [alerts release];
+    [super dealloc];
+}
+
 - (int) showSelectDialog:(NSString *)msg {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"いいえ" otherButtonTitles:@"はい", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:self cancelButtonTitle:cancelLabel otherButtonTitles:decideLabel, nil];
     alert.tag = ++_id;
     [alert show];
     [alert autorelease];
@@ -72,7 +88,7 @@ static UNDialogManager * shardDialogManager;
 }
 
 - (int) showSelectDialog:(NSString *)title message:(NSString*)msg {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"いいえ" otherButtonTitles:@"はい", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:cancelLabel otherButtonTitles:decideLabel, nil];
     alert.tag = ++_id;
     [alert show];
     [alert autorelease];
@@ -82,7 +98,7 @@ static UNDialogManager * shardDialogManager;
 }
 
 - (int) showSubmitDialog:(NSString *)msg {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:@"閉じる", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:closeLabel, nil];
     alert.tag = ++_id;
     [alert show];
     [alert autorelease];
@@ -92,7 +108,7 @@ static UNDialogManager * shardDialogManager;
 }
 
 - (int) showSubmitDialog:(NSString *)title message:(NSString*)msg {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:@"閉じる", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:closeLabel, nil];
     alert.tag = ++_id;
     [alert show];
     [alert autorelease];
@@ -105,6 +121,20 @@ static UNDialogManager * shardDialogManager;
     UIAlertView *alert = alerts[[NSNumber numberWithInt:theID]];
     [alert dismissWithClickedButtonIndex:0 animated:YES];
     [alerts removeObjectForKey:[NSNumber numberWithInt:theID]];
+}
+
+- (void) setLabelTitleWithDecide:(NSString*)decide cancel:(NSString*)cancel close:(NSString*) close {
+    [decideLabel release];
+    [cancelLabel release];
+    [closeLabel release];
+
+    decideLabel = [NSString stringWithString:decide];
+    cancelLabel = [NSString stringWithString:cancel];
+    closeLabel = [NSString stringWithString:close];
+    
+    [decideLabel retain];
+    [cancelLabel retain];
+    [closeLabel retain];
 }
 
 // delegate

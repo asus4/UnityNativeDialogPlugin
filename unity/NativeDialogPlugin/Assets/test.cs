@@ -2,6 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class test : MonoBehaviour {
+	
+	public string decideLabel;
+	public string cancelLabel;
+	public string closeLabel;
+	
+	void Start() {
+		DialogManager.Instance.SetLabel(decideLabel, cancelLabel, closeLabel);
+	}
 
 	void OnGUI() {
 		if(GUILayout.Button("aaa", GUILayout.MinWidth(200), GUILayout.MinHeight(100))) {
