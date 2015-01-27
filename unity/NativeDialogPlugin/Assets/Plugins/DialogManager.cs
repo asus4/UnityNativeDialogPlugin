@@ -15,7 +15,13 @@ public class DialogManager : MonoBehaviour
 	public static DialogManager Instance {
 		get {
 			if (_instance == null) {
-				_instance = new GameObject ("DialogManager").AddComponent<DialogManager> ();
+				// find if there is already DialogManager in the scene
+				_instance = GameObject.FindObjectOfType<DialogManager>(); 
+				
+				if(_instance == null) {
+					_instance = new GameObject ("DialogManager").AddComponent<DialogManager> ();
+				}
+				
 				DontDestroyOnLoad (_instance.gameObject);
 			}
 			return _instance;
@@ -30,9 +36,27 @@ public class DialogManager : MonoBehaviour
 	#region Lyfecycles
 	void Awake ()
 	{
-		_delegates = new Dictionary<int, Action<bool>> ();
-		// set default label
-		SetLabel("YES", "NO", "CLOSE");
+		if(_instance == null)
+		{
+         		//If I am the first instance, make me the Singleton
+         		_instance = this;
+         		DontDestroyOnLoad(this);
+
+         		_delegates = new Dictionary<int, Action<bool>> ();
+         
+         		// set default label
+         		SetLabel("YES", "NO", "CLOSE");
+			
+		}
+		else
+		{
+			//If a Singleton already exists and you find
+			//another reference in scene, destroy it!
+			if(this != _instance)
+			{
+				Destroy(this.gameObject);
+			}
+		}
 	}
 	
 	void OnDestroy ()
