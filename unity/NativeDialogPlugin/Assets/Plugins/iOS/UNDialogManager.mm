@@ -64,25 +64,14 @@ static UNDialogManager * shardDialogManager;
 
 - (id) init {
     alerts = [NSMutableDictionary dictionary];
-    [alerts retain];
-
     return [super init];
 }
 
-- (void) dealloc {
-    [decideLabel release];
-    [cancelLabel release];
-    [closeLabel release];
-    [alerts release];
-    [super dealloc];
-}
 
 - (int) showSelectDialog:(NSString *)msg {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:self cancelButtonTitle:cancelLabel otherButtonTitles:decideLabel, nil];
     alert.tag = ++_id;
     [alert show];
-    [alert autorelease];
-    
     [alerts setObject:alert forKey:[NSNumber numberWithInt:_id]];
     return _id;
 }
@@ -91,8 +80,6 @@ static UNDialogManager * shardDialogManager;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:cancelLabel otherButtonTitles:decideLabel, nil];
     alert.tag = ++_id;
     [alert show];
-    [alert autorelease];
-    
     [alerts setObject:alert forKey:[NSNumber numberWithInt:_id]];
     return _id;
 }
@@ -101,8 +88,6 @@ static UNDialogManager * shardDialogManager;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:closeLabel, nil];
     alert.tag = ++_id;
     [alert show];
-    [alert autorelease];
-    
     [alerts setObject:alert forKey:[NSNumber numberWithInt:_id]];
     return _id;
 }
@@ -111,8 +96,6 @@ static UNDialogManager * shardDialogManager;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:closeLabel, nil];
     alert.tag = ++_id;
     [alert show];
-    [alert autorelease];
-    
     [alerts setObject:alert forKey:[NSNumber numberWithInt:_id]];
     return _id;
 }
@@ -124,17 +107,9 @@ static UNDialogManager * shardDialogManager;
 }
 
 - (void) setLabelTitleWithDecide:(NSString*)decide cancel:(NSString*)cancel close:(NSString*) close {
-    [decideLabel release];
-    [cancelLabel release];
-    [closeLabel release];
-
     decideLabel = [NSString stringWithString:decide];
     cancelLabel = [NSString stringWithString:cancel];
     closeLabel = [NSString stringWithString:close];
-    
-    [decideLabel retain];
-    [cancelLabel retain];
-    [closeLabel retain];
 }
 
 // delegate
