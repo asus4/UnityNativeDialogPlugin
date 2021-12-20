@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using NativeDialog;
 
 public class NativeDialogSample : MonoBehaviour
 {

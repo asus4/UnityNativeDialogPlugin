@@ -1,0 +1,15 @@
+{
+    "name": "com.github.asus4.nativedialog",
+    "displayName": "Native Dialog",
+    "author": "Koki Ibukuro",
+    "description": "Native Dialog Plugin for Unity",
+    "keywords": [
+      "unity"
+    ],
+    "license": "SEE LICENSE IN LICENSE",
+    "unity": "2020.3",
+    "unityRelease": "0f1",
+    "version": "1.0.0",
+    "type": "library",
+    "hideInEditor": false
+  }
