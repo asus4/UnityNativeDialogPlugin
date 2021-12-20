@@ -3,54 +3,66 @@ using System.Collections;
 
 public class NativeDialogSample : MonoBehaviour
 {
-    public string decideLabel;
-    public string cancelLabel;
-    public string closeLabel;
+    [SerializeField] private string decideLabel = "Decide";
+    [SerializeField] private string cancelLabel = "Cancel";
+    [SerializeField] private string closeLabel = "Close";
 
-    void Start()
+    private void Start()
     {
         DialogManager.Instance.SetLabel(decideLabel, cancelLabel, closeLabel);
     }
 
-    void OnGUI()
+    #region Invoked from Unity GUI
+
+    public void ShowSelectDialog()
     {
-        if (GUILayout.Button("aaa", GUILayout.MinWidth(200), GUILayout.MinHeight(100)))
+        const string message = "A simple select dialog";
+        DialogManager.Instance.ShowSelectDialog(message, (bool result) =>
         {
-            DialogManager.Instance.ShowSelectDialog("aaa", (bool result) =>
-            {
-                Debug.Log("aaa" + result);
-            });
-        }
-        if (GUILayout.Button("bbb", GUILayout.MinWidth(200), GUILayout.MinHeight(100)))
-        {
-            DialogManager.Instance.ShowSelectDialog("b title", "bbb", (bool result) =>
-            {
-                Debug.Log("bbb" + result);
-            });
-        }
-        if (GUILayout.Button("ccc", GUILayout.MinWidth(200), GUILayout.MinHeight(100)))
-        {
-            DialogManager.Instance.ShowSubmitDialog("ccc", (bool result) =>
-            {
-                Debug.Log("ccc");
-            });
-        }
-        if (GUILayout.Button("ddd", GUILayout.MinWidth(200), GUILayout.MinHeight(100)))
-        {
-            DialogManager.Instance.ShowSubmitDialog("d title", "ddd", (bool result) =>
-            {
-                Debug.Log("ddd");
-            });
-        }
-        if (GUILayout.Button("eee auto dissmiss", GUILayout.MinWidth(200), GUILayout.MinHeight(100)))
-        {
-            int id = DialogManager.Instance.ShowSelectDialog("eee", (bool result) =>
-            {
-                Debug.Log("eee" + result);
-            });
-            StartCoroutine(Dissmiss(id, 3f));
-        }
+            Debug.Log($"{result}: {message}");
+        });
     }
+
+    public void ShowSelectDialogWithTitle()
+    {
+        const string title = "A title";
+        const string message = "A message for select dialog";
+        DialogManager.Instance.ShowSelectDialog(title, message, (bool result) =>
+        {
+            Debug.Log($"{result}: {title} / {message}");
+        });
+    }
+
+    public void ShowSubmitDialog()
+    {
+        const string message = "A simple submit dialog";
+        DialogManager.Instance.ShowSubmitDialog(message, (bool result) =>
+        {
+            Debug.Log($"{result}: {message}");
+        });
+    }
+
+    public void ShowSubmitDialogWithTitle()
+    {
+        const string title = "A title";
+        const string message = "A message for submit dialog";
+        DialogManager.Instance.ShowSubmitDialog(title, message, (bool result) =>
+        {
+            Debug.Log($"{result}: {title} / {message}");
+        });
+    }
+
+    public void ShowDialogWithAutoDissmiss()
+    {
+        const string message = "A dialog with auto dismiss";
+        int id = DialogManager.Instance.ShowSelectDialog(message, (bool result) =>
+        {
+            Debug.Log($"{result}: {message}");
+        });
+        StartCoroutine(Dissmiss(id, 3f));
+    }
+
+    #endregion // Invoked from Unity GUI
 
     private IEnumerator Dissmiss(int id, float time)
     {
