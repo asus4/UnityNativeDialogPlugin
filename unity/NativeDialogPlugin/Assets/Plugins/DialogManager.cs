@@ -76,7 +76,7 @@ public class DialogManager : MonoBehaviour
 	{
 		EditorDialog.Draw ();
 	}
-	#elif UNITY_IPHONE
+	#elif UNITY_IOS
 	[DllImport("__Internal")]
     private static extern int _showSelectDialog (string msg);
 	[DllImport("__Internal")]
@@ -103,7 +103,7 @@ public class DialogManager : MonoBehaviour
             id = cls.CallStatic<int>("ShowSelectDialog", msg);
 			_delegates.Add(id, del);
         }	
-		#elif UNITY_IPHONE
+		#elif UNITY_IOS
 			id = _showSelectDialog(msg);
 			_delegates.Add(id, del);
 		#endif
@@ -120,7 +120,7 @@ public class DialogManager : MonoBehaviour
             id = cls.CallStatic<int>("ShowSelectTitleDialog", title, msg);
 			_delegates.Add(id, del);
         }	
-		#elif UNITY_IPHONE
+		#elif UNITY_IOS
 			id = _showSelectTitleDialog(title, msg);
 			_delegates.Add(id, del);
 		#endif
@@ -137,7 +137,7 @@ public class DialogManager : MonoBehaviour
             id = cls.CallStatic<int>("ShowSubmitDialog", msg);
 			_delegates.Add(id, del);
         }
-		#elif UNITY_IPHONE
+		#elif UNITY_IOS
 			id = _showSubmitDialog(msg);
 			_delegates.Add(id, del);
 		#endif
@@ -154,7 +154,7 @@ public class DialogManager : MonoBehaviour
             id = cls.CallStatic<int>("ShowSubmitTitleDialog", title, msg);
 			_delegates.Add(id, del);
         }
-		#elif UNITY_IPHONE
+		#elif UNITY_IOS
 			id = _showSubmitTitleDialog(title, msg);
 			_delegates.Add(id, del);
 		#endif
@@ -168,7 +168,7 @@ public class DialogManager : MonoBehaviour
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
             cls.CallStatic("DissmissDialog", id);
         }
-		#elif UNITY_IPHONE
+		#elif UNITY_IOS
 			_dissmissDialog(id);
 		#endif
 		
@@ -188,7 +188,7 @@ public class DialogManager : MonoBehaviour
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
             cls.CallStatic("SetLabel", decide, cancel, close);
         }
-		#elif UNITY_IPHONE
+		#elif UNITY_IOS
 			_setLabel(decide, cancel, close);
 		#endif
 		
