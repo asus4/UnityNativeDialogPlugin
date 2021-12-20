@@ -6,4 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/test.unity
+    path: Assets/NativeDialogSample.unity
+    guid: a1faf9c15faa74cb88a6f2414049432a
+  m_configObjects: {}
