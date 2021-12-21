@@ -1,13 +1,29 @@
+using System.Collections;
 using UnityEngine;
 
 namespace NativeDialog
 {
-    public sealed class DialogMock : IDialog
+    internal sealed class DialogMock : MonoBehaviour, IDialog
     {
+        [SerializeField]
+        private float mockCallbackDelay = 1.0f;
+
+        [SerializeField]
+        private bool mockResult = true;
+
         private int id = 0;
+        private IDialogReceiver receiver;
+
+
+        public void Initialize(IDialogReceiver receiver, bool mockResult)
+        {
+            this.receiver = receiver;
+            this.mockResult = mockResult;
+        }
 
         public void Dispose()
         {
+            receiver = null;
         }
 
         public void SetLabel(string decide, string cancel, string close)
@@ -17,31 +33,53 @@ namespace NativeDialog
 
         public int ShowSelect(string message)
         {
-            Debug.Log($"ShowSelect: {message}");
-            return ++id;
+            int newID = ++id;
+            Debug.Log($"{newID}: ShowSelect: {message}");
+            ExecuteMockCallback(newID);
+            return newID;
         }
 
         public int ShowSelect(string title, string message)
         {
-            Debug.Log($"ShowSelect: {title}, {message}");
-            return ++id;
+            int newID = ++id;
+            Debug.Log($"{newID}: ShowSelect: {title}, {message}");
+            ExecuteMockCallback(newID);
+            return newID;
         }
 
         public int ShowSubmit(string message)
         {
-            Debug.Log($"ShowSubmit: {message}");
-            return ++id;
+            int newID = ++id;
+            Debug.Log($"{newID}: ShowSubmit: {message}");
+            ExecuteMockCallback(newID);
+            return newID;
         }
 
         public int ShowSubmit(string title, string message)
         {
-            Debug.Log($"ShowSubmit: {title}, {message}");
-            return ++id;
+            int newID = ++id;
+            Debug.Log($"{newID}: ShowSubmit: {title}, {message}");
+            ExecuteMockCallback(newID);
+            return newID;
         }
 
         public void Dissmiss(int id)
         {
             Debug.Log($"Dissmiss: {id}");
+        }
+
+        private void ExecuteMockCallback(int id)
+        {
+            StartCoroutine(MockCallback(id));
+        }
+
+        private IEnumerator MockCallback(int id)
+        {
+            yield return new WaitForSeconds(mockCallbackDelay);
+            if (mockResult)
+            {
+                receiver.OnSubmit(id.ToString());
+            }
         }
     }
 }

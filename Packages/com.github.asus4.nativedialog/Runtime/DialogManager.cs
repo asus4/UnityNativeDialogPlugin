@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace NativeDialog
@@ -8,180 +7,133 @@ namespace NativeDialog
     /// <summary>
     /// Popup Native Dialog
     /// </summary>
-    public class DialogManager : MonoBehaviour
+    public sealed class DialogManager : MonoBehaviour, IDialogReceiver
     {
 
-        #region static Singleton
-        static DialogManager _instance;
-
+        #region Singleton
+        private static DialogManager instance;
         public static DialogManager Instance
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
                     // Find if there is already DialogManager in the scene
-                    _instance = FindObjectOfType<DialogManager>();
-                    if (_instance == null)
+                    instance = FindObjectOfType<DialogManager>();
+                    if (instance == null)
                     {
-                        _instance = new GameObject("DialogManager").AddComponent<DialogManager>();
+                        instance = new GameObject("DialogManager").AddComponent<DialogManager>();
                     }
-                    DontDestroyOnLoad(_instance.gameObject);
+                    DontDestroyOnLoad(instance.gameObject);
                 }
-                return _instance;
+                return instance;
             }
         }
         #endregion
 
-        #region members
-        private Dictionary<int, Action<bool>> _callbacks;
+        #region Members
+        private Dictionary<int, Action<bool>> callbacks;
+        private IDialog dialog;
         #endregion
 
         #region Lyfecycles
         private void Awake()
         {
-            if (_instance == null)
+            if (instance == null)
             {
-                //If I am the first instance, make me the Singleton
-                _instance = this;
+                // If I am the first instance, make me the Singleton
+                instance = this;
                 DontDestroyOnLoad(this);
 
-                _callbacks = new Dictionary<int, Action<bool>>();
+                callbacks = new Dictionary<int, Action<bool>>();
+                dialog = CreateDialog();
 
-                // set default label
+                // Set default label
                 SetLabel("YES", "NO", "CLOSE");
-
             }
             else
             {
-                //If a Singleton already exists and you find
-                //another reference in scene, destroy it!
-                if (this != _instance)
+                // If s singleton already exists and you find
+                // another reference in scene, destroy it!
+                if (this != instance)
                 {
-                    Destroy(this.gameObject);
+                    Destroy(gameObject);
                 }
             }
         }
 
+        private IDialog CreateDialog()
+        {
+#if UNITY_EDITOR
+            var mock = gameObject.AddComponent<DialogMock>();
+            mock.Initialize(this, true);
+            return mock;
+#elif UNITY_ANDROID
+            return new DialogAndroid();
+#elif UNITY_IOS
+            return new DialogIOS();
+#else
+            Debug.LogWarning($"{Application.platform} is not supported.");
+            var mock = gameObject.AddComponent<DialogMock>();
+            mock.Initialize(this, true);
+            return mock;
+#endif
+        }
+
         private void OnDestroy()
         {
-            if (_callbacks != null)
+            if (callbacks != null)
             {
-                _callbacks.Clear();
-                _callbacks = null;
+                callbacks.Clear();
+                callbacks = null;
             }
+
+            dialog.Dispose();
         }
         #endregion
 
-
-
-#if UNITY_EDITOR
-        // only editor.. show dummy gui
-        void OnGUI()
+        public static void SetLabel(string decide, string cancel, string close)
         {
-            EditorDialog.Draw();
+            Instance.dialog.SetLabel(decide, cancel, close);
         }
-#elif UNITY_IOS
-	[DllImport("__Internal")]
-    private static extern int _showSelectDialog (string msg);
-	[DllImport("__Internal")]
-	private static extern int _showSelectTitleDialog (string title, string msg);
-	[DllImport("__Internal")]
-	private static extern int _showSubmitDialog (string msg);
-	[DllImport("__Internal")]
-	private static extern int _showSubmitTitleDialog (string title, string msg);
-	[DllImport("__Internal")]
-	private static extern void _dissmissDialog (int id);
-	[DllImport("__Internal")]
-	private static extern void _setLabel(string decide, string cancel, string close);
-#endif
 
-
-
-        public int ShowSelectDialog(string msg, Action<bool> callback)
+        public static int ShowSelect(string message, Action<bool> callback)
         {
-            int id;
-#if UNITY_EDITOR
-            id = 0;
-#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            id = cls.CallStatic<int>("ShowSelectDialog", msg);
-			_callbacks.Add(id, callback);
-        }	
-#elif UNITY_IOS
-			id = _showSelectDialog(msg);
-			_callbacks.Add(id, callback);
-#endif
+            int id = Instance.dialog.ShowSelect(message);
+            Instance.callbacks.Add(id, callback);
             return id;
         }
 
-        public int ShowSelectDialog(string title, string msg, Action<bool> del)
+        public static int ShowSelect(string title, string message, Action<bool> callback)
         {
-            int id;
-#if UNITY_EDITOR
-            id = 0;
-#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            id = cls.CallStatic<int>("ShowSelectTitleDialog", title, msg);
-			_callbacks.Add(id, del);
-        }	
-#elif UNITY_IOS
-			id = _showSelectTitleDialog(title, msg);
-			_callbacks.Add(id, del);
-#endif
+            int id = Instance.dialog.ShowSelect(title, message);
+            Instance.callbacks.Add(id, callback);
             return id;
         }
 
-        public int ShowSubmitDialog(string msg, Action<bool> del)
+        public static int ShowSubmit(string message, Action<bool> callback)
         {
-            int id;
-#if UNITY_EDITOR
-            id = 0;
-#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            id = cls.CallStatic<int>("ShowSubmitDialog", msg);
-			_callbacks.Add(id, del);
-        }
-#elif UNITY_IOS
-			id = _showSubmitDialog(msg);
-			_callbacks.Add(id, del);
-#endif
+            int id = Instance.dialog.ShowSubmit(message);
+            Instance.callbacks.Add(id, callback);
             return id;
         }
 
-        public int ShowSubmitDialog(string title, string msg, Action<bool> del)
+        public static int ShowSubmit(string title, string message, Action<bool> del)
         {
-            int id;
-#if UNITY_EDITOR
-            id = 0;
-#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            id = cls.CallStatic<int>("ShowSubmitTitleDialog", title, msg);
-			_callbacks.Add(id, del);
-        }
-#elif UNITY_IOS
-			id = _showSubmitTitleDialog(title, msg);
-			_callbacks.Add(id, del);
-#endif
+            int id = Instance.dialog.ShowSubmit(title, message);
+            Instance.callbacks.Add(id, del);
             return id;
         }
 
-        public void DissmissDialog(int id)
+        public static void Dissmiss(int id)
         {
-#if UNITY_EDITOR
+            Instance.dialog.Dissmiss(id);
 
-#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            cls.CallStatic("DissmissDialog", id);
-        }
-#elif UNITY_IOS
-			_dissmissDialog(id);
-#endif
-
-            if (_callbacks.ContainsKey(id))
+            var callbacks = Instance.callbacks;
+            if (callbacks.ContainsKey(id))
             {
-                _callbacks[id](false);
-                _callbacks.Remove(id);
+                Instance.callbacks[id](false);
+                callbacks.Remove(id);
             }
             else
             {
@@ -189,108 +141,35 @@ namespace NativeDialog
             }
         }
 
-        public void SetLabel(string decide, string cancel, string close)
-        {
-
-#if UNITY_EDITOR
-
-#elif UNITY_ANDROID
-		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
-            cls.CallStatic("SetLabel", decide, cancel, close);
-        }
-#elif UNITY_IOS
-			_setLabel(decide, cancel, close);
-#endif
-
-        }
 
         #region Invoked from Native Plugin
         public void OnSubmit(string idStr)
         {
             int id = int.Parse(idStr);
-            if (_callbacks.ContainsKey(id))
+            if (callbacks.ContainsKey(id))
             {
-                _callbacks[id](true);
-                _callbacks.Remove(id);
+                callbacks[id](true);
+                callbacks.Remove(id);
             }
             else
             {
-                Debug.LogWarning("undefined id:" + idStr);
+                Debug.LogWarning("Undefined id:" + idStr);
             }
         }
 
         public void OnCancel(string idStr)
         {
             int id = int.Parse(idStr);
-            if (_callbacks.ContainsKey(id))
+            if (callbacks.ContainsKey(id))
             {
-                _callbacks[id](false);
-                _callbacks.Remove(id);
+                callbacks[id](false);
+                callbacks.Remove(id);
             }
             else
             {
-                Debug.LogWarning("undefined id:" + idStr);
+                Debug.LogWarning("Undefined id:" + idStr);
             }
         }
         #endregion
-
-#if UNITY_EDITOR
-        // this is test class for editor
-        class EditorDialog
-        {
-            static int _TOTAL_ID;
-
-            Rect _windowRect;
-            int _id;
-            string msg;
-
-            public static void Draw()
-            {
-
-            }
-
-            public void _Draw()
-            {
-                int w = Screen.width;
-                int h = Screen.height;
-
-                if (_windowRect.width == 0)
-                {
-                    _windowRect = new Rect(w * 0.1f, h / 2 - 300, w - w * 0.2f, 600);
-                }
-                _windowRect = GUILayout.Window(_TOTAL_ID, _windowRect, DoMyWindow, "My Window");
-            }
-
-            void DoMyWindow(int windowID)
-            {
-                GUILayout.Label("lakdjfalskdjfalskdjfalk");
-                GUILayout.BeginHorizontal();
-
-                if (GUILayout.Button("NO"))
-                {
-
-                }
-                if (GUILayout.Button("YES"))
-                {
-
-                }
-                GUILayout.EndHorizontal();
-            }
-
-            static public int ShowSelectDialog()
-            {
-                ++_TOTAL_ID;
-                return _TOTAL_ID;
-            }
-
-            static public int ShowSubmitDialog()
-            {
-                ++_TOTAL_ID;
-                return _TOTAL_ID;
-            }
-
-        }
-#endif
-
     }
 }

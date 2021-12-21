@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace NativeDialog
 {
-    public sealed class DialogIOS : IDialog
+    internal sealed class DialogIOS : IDialog
     {
         public void Dispose()
         {

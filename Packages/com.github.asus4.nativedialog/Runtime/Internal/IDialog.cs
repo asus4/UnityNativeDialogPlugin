@@ -1,6 +1,6 @@
 namespace NativeDialog
 {
-    public interface IDialog : System.IDisposable
+    internal interface IDialog : System.IDisposable
     {
         void SetLabel(string decide, string cancel, string close);
         int ShowSelect(string message);

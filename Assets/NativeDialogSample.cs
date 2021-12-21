@@ -10,7 +10,7 @@ public class NativeDialogSample : MonoBehaviour
 
     private void Start()
     {
-        DialogManager.Instance.SetLabel(decideLabel, cancelLabel, closeLabel);
+        DialogManager.SetLabel(decideLabel, cancelLabel, closeLabel);
     }
 
     #region Invoked from Unity GUI
@@ -18,7 +18,7 @@ public class NativeDialogSample : MonoBehaviour
     public void ShowSelectDialog()
     {
         const string message = "A simple select dialog";
-        DialogManager.Instance.ShowSelectDialog(message, (bool result) =>
+        DialogManager.ShowSelect(message, (bool result) =>
         {
             Debug.Log($"{result}: {message}");
         });
@@ -28,7 +28,7 @@ public class NativeDialogSample : MonoBehaviour
     {
         const string title = "A title";
         const string message = "A message for select dialog";
-        DialogManager.Instance.ShowSelectDialog(title, message, (bool result) =>
+        DialogManager.ShowSelect(title, message, (bool result) =>
         {
             Debug.Log($"{result}: {title} / {message}");
         });
@@ -37,7 +37,7 @@ public class NativeDialogSample : MonoBehaviour
     public void ShowSubmitDialog()
     {
         const string message = "A simple submit dialog";
-        DialogManager.Instance.ShowSubmitDialog(message, (bool result) =>
+        DialogManager.ShowSubmit(message, (bool result) =>
         {
             Debug.Log($"{result}: {message}");
         });
@@ -47,7 +47,7 @@ public class NativeDialogSample : MonoBehaviour
     {
         const string title = "A title";
         const string message = "A message for submit dialog";
-        DialogManager.Instance.ShowSubmitDialog(title, message, (bool result) =>
+        DialogManager.ShowSubmit(title, message, (bool result) =>
         {
             Debug.Log($"{result}: {title} / {message}");
         });
@@ -56,7 +56,7 @@ public class NativeDialogSample : MonoBehaviour
     public void ShowDialogWithAutoDissmiss()
     {
         const string message = "A dialog with auto dismiss";
-        int id = DialogManager.Instance.ShowSelectDialog(message, (bool result) =>
+        int id = DialogManager.ShowSelect(message, (bool result) =>
         {
             Debug.Log($"{result}: {message}");
         });
@@ -68,6 +68,6 @@ public class NativeDialogSample : MonoBehaviour
     private IEnumerator Dissmiss(int id, float time)
     {
         yield return new WaitForSeconds(time);
-        DialogManager.Instance.DissmissDialog(id);
+        DialogManager.Dissmiss(id);
     }
 }

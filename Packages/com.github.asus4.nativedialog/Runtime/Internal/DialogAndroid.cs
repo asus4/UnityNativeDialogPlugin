@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NativeDialog
 {
-    public sealed class DialogAndroid : IDialog
+    internal sealed class DialogAndroid : IDialog
     {
         private readonly AndroidJavaClass cls;
 
