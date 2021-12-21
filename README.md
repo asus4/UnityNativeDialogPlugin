@@ -1,4 +1,3 @@
-UnityNativeDialogPlugin
-=======================
+# Unity Native Dialog Plugin
 
-show ios /android native dialog from unity.
+Show iOS / Android native dialog from Unity.
