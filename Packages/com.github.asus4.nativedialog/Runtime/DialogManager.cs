@@ -1,7 +1,7 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace NativeDialog
 {
@@ -20,14 +20,12 @@ namespace NativeDialog
             {
                 if (_instance == null)
                 {
-                    // find if there is already DialogManager in the scene
-                    _instance = GameObject.FindObjectOfType<DialogManager>();
-
+                    // Find if there is already DialogManager in the scene
+                    _instance = FindObjectOfType<DialogManager>();
                     if (_instance == null)
                     {
                         _instance = new GameObject("DialogManager").AddComponent<DialogManager>();
                     }
-
                     DontDestroyOnLoad(_instance.gameObject);
                 }
                 return _instance;
@@ -36,11 +34,11 @@ namespace NativeDialog
         #endregion
 
         #region members
-        Dictionary<int, System.Action<bool>> _delegates;
+        private Dictionary<int, Action<bool>> _callbacks;
         #endregion
 
         #region Lyfecycles
-        void Awake()
+        private void Awake()
         {
             if (_instance == null)
             {
@@ -48,7 +46,7 @@ namespace NativeDialog
                 _instance = this;
                 DontDestroyOnLoad(this);
 
-                _delegates = new Dictionary<int, Action<bool>>();
+                _callbacks = new Dictionary<int, Action<bool>>();
 
                 // set default label
                 SetLabel("YES", "NO", "CLOSE");
@@ -65,12 +63,12 @@ namespace NativeDialog
             }
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
-            if (_delegates != null)
+            if (_callbacks != null)
             {
-                _delegates.Clear();
-                _delegates = null;
+                _callbacks.Clear();
+                _callbacks = null;
             }
         }
         #endregion
@@ -100,7 +98,7 @@ namespace NativeDialog
 
 
 
-        public int ShowSelectDialog(string msg, Action<bool> del)
+        public int ShowSelectDialog(string msg, Action<bool> callback)
         {
             int id;
 #if UNITY_EDITOR
@@ -108,11 +106,11 @@ namespace NativeDialog
 #elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
             id = cls.CallStatic<int>("ShowSelectDialog", msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, callback);
         }	
 #elif UNITY_IOS
 			id = _showSelectDialog(msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, callback);
 #endif
             return id;
         }
@@ -125,11 +123,11 @@ namespace NativeDialog
 #elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
             id = cls.CallStatic<int>("ShowSelectTitleDialog", title, msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, del);
         }	
 #elif UNITY_IOS
 			id = _showSelectTitleDialog(title, msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, del);
 #endif
             return id;
         }
@@ -142,11 +140,11 @@ namespace NativeDialog
 #elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
             id = cls.CallStatic<int>("ShowSubmitDialog", msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, del);
         }
 #elif UNITY_IOS
 			id = _showSubmitDialog(msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, del);
 #endif
             return id;
         }
@@ -159,11 +157,11 @@ namespace NativeDialog
 #elif UNITY_ANDROID
 		using (AndroidJavaClass cls = new AndroidJavaClass("unity.plugins.dialog.DialogManager")) {
             id = cls.CallStatic<int>("ShowSubmitTitleDialog", title, msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, del);
         }
 #elif UNITY_IOS
 			id = _showSubmitTitleDialog(title, msg);
-			_delegates.Add(id, del);
+			_callbacks.Add(id, del);
 #endif
             return id;
         }
@@ -180,10 +178,10 @@ namespace NativeDialog
 			_dissmissDialog(id);
 #endif
 
-            if (_delegates.ContainsKey(id))
+            if (_callbacks.ContainsKey(id))
             {
-                _delegates[id](false);
-                _delegates.Remove(id);
+                _callbacks[id](false);
+                _callbacks.Remove(id);
             }
             else
             {
@@ -210,10 +208,10 @@ namespace NativeDialog
         public void OnSubmit(string idStr)
         {
             int id = int.Parse(idStr);
-            if (_delegates.ContainsKey(id))
+            if (_callbacks.ContainsKey(id))
             {
-                _delegates[id](true);
-                _delegates.Remove(id);
+                _callbacks[id](true);
+                _callbacks.Remove(id);
             }
             else
             {
@@ -224,10 +222,10 @@ namespace NativeDialog
         public void OnCancel(string idStr)
         {
             int id = int.Parse(idStr);
-            if (_delegates.ContainsKey(id))
+            if (_callbacks.ContainsKey(id))
             {
-                _delegates[id](false);
-                _delegates.Remove(id);
+                _callbacks[id](false);
+                _callbacks.Remove(id);
             }
             else
             {
