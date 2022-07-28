@@ -32,7 +32,7 @@ namespace NativeDialog
 
         public int ShowSubmit(string title, string message)
         {
-            return _showSelectTitleDialog(title, message);
+            return _showSubmitTitleDialog(title, message);
         }
 
         public void Dissmiss(int id)
