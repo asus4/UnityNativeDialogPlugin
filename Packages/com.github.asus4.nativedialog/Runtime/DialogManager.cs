@@ -43,7 +43,7 @@ namespace NativeDialog
         private IDialog dialog;
         #endregion
 
-        #region Lifecycles
+        #region Life cycles
         private void Awake()
         {
             if (instance == null)
@@ -98,6 +98,15 @@ namespace NativeDialog
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Gets or sets the custom dialog implementation.
+        /// </summary>
+        public IDialog CustomDialog
+        {
+            get { return dialog; }
+            set { dialog = value; }
+        }
 
         /// <summary>
         /// Sets the button labels for all future dialogs.

@@ -4,7 +4,7 @@ namespace NativeDialog
     /// Interface for platform-specific dialog implementations.
     /// Defines methods for showing native dialogs across different platforms.
     /// </summary>
-    internal interface IDialog : System.IDisposable
+    public interface IDialog : System.IDisposable
     {
         void SetLabel(string decide, string cancel, string close);
         int ShowSelect(string message);
