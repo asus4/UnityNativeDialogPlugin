@@ -53,21 +53,21 @@ public class NativeDialogSample : MonoBehaviour
         });
     }
 
-    public void ShowDialogWithAutoDissmiss()
+    public void ShowDialogWithAutoDismiss()
     {
         const string message = "A dialog with auto dismiss";
         int id = DialogManager.ShowSelect(message, (bool result) =>
         {
             Debug.Log($"{result}: {message}");
         });
-        StartCoroutine(Dissmiss(id, 3f));
+        StartCoroutine(Dismiss(id, 3f));
     }
 
     #endregion // Invoked from Unity GUI
 
-    private IEnumerator Dissmiss(int id, float time)
+    private IEnumerator Dismiss(int id, float time)
     {
         yield return new WaitForSeconds(time);
-        DialogManager.Dissmiss(id);
+        DialogManager.Dismiss(id);
     }
 }

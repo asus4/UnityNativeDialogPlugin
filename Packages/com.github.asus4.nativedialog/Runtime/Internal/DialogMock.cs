@@ -63,9 +63,9 @@ namespace NativeDialog
             return newID;
         }
 
-        public void Dissmiss(int id)
+        public void Dismiss(int id)
         {
-            Debug.Log($"Dissmiss: {id}");
+            Debug.Log($"Dismiss: {id}");
         }
 
         private void ExecuteMockCallback(int id)
