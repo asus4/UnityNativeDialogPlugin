@@ -43,7 +43,7 @@ https://github.com/user-attachments/assets/4760a655-3fbf-4781-a084-6848f53da53c
 1. Open the Package Manager Window.
 2. Click `+` and select "Add package from git URL".
 3. Paste the following URL:  
-`https://github.com/asus4/UnityNativeDialogPlugin.git?path=/Packages/com.github.asus4.nativedialog#v1.1.0`
+`https://github.com/asus4/UnityNativeDialogPlugin.git?path=/Packages/com.github.asus4.nativedialog#v1.2.0`
 
 ## 📄 License
 
