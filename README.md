@@ -26,11 +26,11 @@ For more examples, see [NativeDialogSample.cs](Assets/NativeDialogSample.cs)
 
 ### Android
 
-![Android Dialog](https://github.com/user-attachments/assets/390e011a-7b3e-4128-8fd6-369c98a35054)
+https://github.com/user-attachments/assets/390e011a-7b3e-4128-8fd6-369c98a35054
 
 ### iOS
 
-![iOS Dialog](https://github.com/user-attachments/assets/4760a655-3fbf-4781-a084-6848f53da53c)
+https://github.com/user-attachments/assets/4760a655-3fbf-4781-a084-6848f53da53c
 
 ### Editor Fallback
 
