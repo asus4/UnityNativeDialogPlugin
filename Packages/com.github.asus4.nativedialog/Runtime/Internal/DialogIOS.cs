@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace NativeDialog
 {
+    /// <summary>
+    /// iOS-specific implementation of native dialogs using DllImport to call native methods.
+    /// </summary>
     internal sealed class DialogIOS : IDialog
     {
         public void Dispose()

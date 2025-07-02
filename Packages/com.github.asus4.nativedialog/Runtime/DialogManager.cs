@@ -5,13 +5,19 @@ using UnityEngine;
 namespace NativeDialog
 {
     /// <summary>
-    /// Popup Native Dialog
+    /// Manages Native Dialog popups across different platforms.
+    /// Provides a unified interface for showing native select and submit dialogs on iOS, Android, and Unity Editor.
     /// </summary>
     public sealed class DialogManager : MonoBehaviour, IDialogReceiver
     {
 
         #region Singleton
         private static DialogManager instance;
+        
+        /// <summary>
+        /// Gets the singleton instance of DialogManager.
+        /// Creates a new instance if one doesn't exist.
+        /// </summary>
         public static DialogManager Instance
         {
             get
@@ -33,10 +39,11 @@ namespace NativeDialog
 
         #region Members
         private Dictionary<int, Action<bool>> callbacks;
+
         private IDialog dialog;
         #endregion
 
-        #region Lyfecycles
+        #region Lifecycles
         private void Awake()
         {
             if (instance == null)
@@ -65,9 +72,7 @@ namespace NativeDialog
         private IDialog CreateDialog()
         {
 #if UNITY_EDITOR
-            var mock = gameObject.AddComponent<DialogMock>();
-            mock.Initialize(this, true);
-            return mock;
+            return new DialogEditor(this);
 #elif UNITY_ANDROID
             return new DialogAndroid();
 #elif UNITY_IOS
@@ -92,11 +97,25 @@ namespace NativeDialog
         }
         #endregion
 
+        #region Public Methods
+
+        /// <summary>
+        /// Sets the button labels for all future dialogs.
+        /// </summary>
+        /// <param name="decide">Label for the positive/confirm button</param>
+        /// <param name="cancel">Label for the negative/cancel button</param>
+        /// <param name="close">Label for the close button in submit dialogs</param>
         public static void SetLabel(string decide, string cancel, string close)
         {
             Instance.dialog.SetLabel(decide, cancel, close);
         }
 
+        /// <summary>
+        /// Shows a selection dialog with OK/Cancel buttons.
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        /// <param name="callback">Callback invoked with true for OK, false for Cancel</param>
+        /// <returns>Dialog ID that can be used to dismiss the dialog</returns>
         public static int ShowSelect(string message, Action<bool> callback)
         {
             int id = Instance.dialog.ShowSelect(message);
@@ -104,6 +123,13 @@ namespace NativeDialog
             return id;
         }
 
+        /// <summary>
+        /// Shows a selection dialog with title and OK/Cancel buttons.
+        /// </summary>
+        /// <param name="title">The dialog title</param>
+        /// <param name="message">The message to display</param>
+        /// <param name="callback">Callback invoked with true for OK, false for Cancel</param>
+        /// <returns>Dialog ID that can be used to dismiss the dialog</returns>
         public static int ShowSelect(string title, string message, Action<bool> callback)
         {
             int id = Instance.dialog.ShowSelect(title, message);
@@ -111,6 +137,12 @@ namespace NativeDialog
             return id;
         }
 
+        /// <summary>
+        /// Shows a submit dialog with only an OK button.
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        /// <param name="callback">Callback invoked when the dialog is closed</param>
+        /// <returns>Dialog ID that can be used to dismiss the dialog</returns>
         public static int ShowSubmit(string message, Action<bool> callback)
         {
             int id = Instance.dialog.ShowSubmit(message);
@@ -118,13 +150,25 @@ namespace NativeDialog
             return id;
         }
 
-        public static int ShowSubmit(string title, string message, Action<bool> del)
+        /// <summary>
+        /// Shows a submit dialog with title and only an OK button.
+        /// </summary>
+        /// <param name="title">The dialog title</param>
+        /// <param name="message">The message to display</param>
+        /// <param name="callback">Callback invoked when the dialog is closed</param>
+        /// <returns>Dialog ID that can be used to dismiss the dialog</returns>
+        public static int ShowSubmit(string title, string message, Action<bool> callback)
         {
             int id = Instance.dialog.ShowSubmit(title, message);
-            Instance.callbacks.Add(id, del);
+            Instance.callbacks.Add(id, callback);
             return id;
         }
 
+        /// <summary>
+        /// Programmatically dismisses a dialog.
+        /// Invokes the callback with false (cancelled).
+        /// </summary>
+        /// <param name="id">The ID of the dialog to dismiss</param>
         public static void Dismiss(int id)
         {
             Instance.dialog.Dismiss(id);
@@ -141,6 +185,7 @@ namespace NativeDialog
             }
         }
 
+        #endregion // Public Methods
 
         #region Invoked from Native Plugin
         public void OnSubmit(string idStr)

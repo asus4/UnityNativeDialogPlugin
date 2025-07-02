@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace NativeDialog
 {
+    /// <summary>
+    /// Mock implementation of dialogs for Unity Editor testing.
+    /// Simulates dialog behavior with configurable delays and results.
+    /// </summary>
     internal sealed class DialogMock : MonoBehaviour, IDialog
     {
         [SerializeField]
