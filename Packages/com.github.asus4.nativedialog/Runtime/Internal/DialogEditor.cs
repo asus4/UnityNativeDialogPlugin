@@ -4,6 +4,9 @@ using UnityEditor;
 
 namespace NativeDialog
 {
+    /// <summary>
+    /// Mock implementation of dialogs for Unity Editor.
+    /// </summary>
     internal sealed class DialogEditor : IDialog
     {
         private string decideLabel = "YES";
@@ -61,6 +64,7 @@ namespace NativeDialog
 
         public void Dismiss(int id)
         {
+            UnityEngine.Debug.LogWarning($"Dismiss is not supported in Editor mode. ID: {id}");
             if (pendingDialogs.ContainsKey(id))
             {
                 pendingDialogs.Remove(id);
