@@ -72,9 +72,7 @@ namespace NativeDialog
         private IDialog CreateDialog()
         {
 #if UNITY_EDITOR
-            var mock = gameObject.AddComponent<DialogMock>();
-            mock.Initialize(this, true);
-            return mock;
+            return new DialogEditor(this);
 #elif UNITY_ANDROID
             return new DialogAndroid();
 #elif UNITY_IOS
