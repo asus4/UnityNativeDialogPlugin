@@ -1,22 +1,40 @@
 # Unity Native Dialog Plugin
 
-Displays iOS / Android native dialog from Unity.
+A lightweight Unity plugin for displaying native iOS and Android dialog boxes. Perfect for confirmation prompts, alerts, and user notifications with platform-specific styling.
 
-## Screen shots
+## 🚀 Quick Start
 
-Android  
+### Basic Usage
 
-https://github.com/user-attachments/assets/390e011a-7b3e-4128-8fd6-369c98a35054
+```csharp
+using NativeDialog;
 
-iOS  
+// Show a simple OK/Cancel dialog
+DialogManager.ShowSelect("Are you sure?", (bool result) => {
+    Debug.Log($"User selected: {result}");
+});
 
-https://github.com/user-attachments/assets/4760a655-3fbf-4781-a084-6848f53da53c
+// Show a notification dialog with OK button only
+DialogManager.ShowSubmit("Operation completed!", (bool result) => {
+    Debug.Log("Dialog closed");
+});
+```
 
-Editor Fallback  
+For more examples, see [NativeDialogSample.cs](Assets/NativeDialogSample.cs)
 
-![editor-fallback Large](https://github.com/user-attachments/assets/3fdb094d-397e-4af7-92e9-8ca75d323f50)
+## 📱 Screenshots
 
+### Android
 
+![Android Dialog](https://github.com/user-attachments/assets/390e011a-7b3e-4128-8fd6-369c98a35054)
+
+### iOS
+
+![iOS Dialog](https://github.com/user-attachments/assets/4760a655-3fbf-4781-a084-6848f53da53c)
+
+### Editor Fallback
+
+![Editor Fallback](https://github.com/user-attachments/assets/3fdb094d-397e-4af7-92e9-8ca75d323f50)
 
 ## Install via UPM
 
@@ -26,3 +44,7 @@ Editor Fallback
 2. Click `+` and select "Add package from git URL".
 3. Paste the following URL:  
 `https://github.com/asus4/UnityNativeDialogPlugin.git?path=/Packages/com.github.asus4.nativedialog#v1.1.0`
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
