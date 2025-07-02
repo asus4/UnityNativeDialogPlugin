@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace NativeDialog
 {
+    /// <summary>
+    /// Android-specific implementation of native dialogs using AndroidJavaClass.
+    /// </summary>
     internal sealed class DialogAndroid : IDialog
     {
         private readonly AndroidJavaClass cls;
