@@ -18,5 +18,8 @@
   "author": {
     "name": "Koki Ibukuro",
     "url": "https://github.com/asus4"
+  },
+  "dependencies": {
+    "com.unity.modules.androidjni": "1.0.0"
   }
 }

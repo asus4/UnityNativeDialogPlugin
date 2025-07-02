@@ -4,7 +4,9 @@
       "version": "file:com.github.asus4.nativedialog",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0"
+      }
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
@@ -41,6 +43,12 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.unity.modules.androidjni": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.modules.imgui": {
       "version": "1.0.0",
