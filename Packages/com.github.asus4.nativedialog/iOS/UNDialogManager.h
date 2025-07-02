@@ -21,6 +21,6 @@
 - (int) showSelectDialog:(NSString *)title message:(NSString*)msg;
 - (int) showSubmitDialog:(NSString *)msg;
 - (int) showSubmitDialog:(NSString *)title message:(NSString*)msg;
-- (void) dissmissDialog:(int) theID;
+- (void) dismissDialog:(int) theID;
 - (void) setLabelTitleWithDecide:(NSString*)decide cancel:(NSString*)cancel close:(NSString*) close;
 @end

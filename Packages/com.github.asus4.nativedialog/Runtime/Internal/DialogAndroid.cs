@@ -43,9 +43,9 @@ namespace NativeDialog
             return cls.CallStatic<int>("ShowSubmitTitleDialog", title, message);
         }
 
-        public void Dissmiss(int id)
+        public void Dismiss(int id)
         {
-            cls.CallStatic("DissmissDialog", id);
+            cls.CallStatic("DismissDialog", id);
         }
     }
 }

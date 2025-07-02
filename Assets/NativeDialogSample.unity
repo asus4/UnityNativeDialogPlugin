@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 364165590}
   - component: {fileID: 364165589}
   m_Layer: 5
-  m_Name: Button - ShowDialogWithAutoDissmiss
+  m_Name: Button - ShowDialogWithAutoDismiss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,7 +309,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1045089954}
         m_TargetAssemblyTypeName: NativeDialogSample, Assembly-CSharp
-        m_MethodName: ShowDialogWithAutoDissmiss
+        m_MethodName: ShowDialogWithAutoDismiss
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -427,7 +427,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Dialog with Auto Dissmiss
+  m_Text: Dialog with Auto Dismiss
 --- !u!222 &440667844
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -7,6 +7,6 @@ namespace NativeDialog
         int ShowSelect(string title, string message);
         int ShowSubmit(string message);
         int ShowSubmit(string title, string message);
-        void Dissmiss(int id);
+        void Dismiss(int id);
     }
 }

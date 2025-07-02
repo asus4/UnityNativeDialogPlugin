@@ -35,9 +35,9 @@ namespace NativeDialog
             return _showSubmitTitleDialog(title, message);
         }
 
-        public void Dissmiss(int id)
+        public void Dismiss(int id)
         {
-            _dissmissDialog(id);
+            _dismissDialog(id);
         }
 
 
@@ -50,7 +50,7 @@ namespace NativeDialog
         [DllImport("__Internal")]
         private static extern int _showSubmitTitleDialog(string title, string msg);
         [DllImport("__Internal")]
-        private static extern void _dissmissDialog(int id);
+        private static extern void _dismissDialog(int id);
         [DllImport("__Internal")]
         private static extern void _setLabel(string decide, string cancel, string close);
     }

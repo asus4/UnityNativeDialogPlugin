@@ -35,8 +35,8 @@ extern "C" {
                 message:[NSString stringWithUTF8String:msg]];
     }
     
-    void _dissmissDialog(const int theID){
-        [[UNDialogManager sharedManager] dissmissDialog:theID];
+    void _dismissDialog(const int theID){
+        [[UNDialogManager sharedManager] dismissDialog:theID];
     }
 
     void _setLabel(const char *decide, const char *cancel, const char *close) {
@@ -100,7 +100,7 @@ static UNDialogManager * shardDialogManager;
     return _id;
 }
 
-- (void) dissmissDialog:(int)theID {
+- (void) dismissDialog:(int)theID {
     UIAlertView *alert = alerts[[NSNumber numberWithInt:theID]];
     [alert dismissWithClickedButtonIndex:0 animated:YES];
     [alerts removeObjectForKey:[NSNumber numberWithInt:theID]];

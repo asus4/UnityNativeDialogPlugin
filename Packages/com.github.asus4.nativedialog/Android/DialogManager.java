@@ -188,7 +188,7 @@ public class DialogManager {
 		return id;
 	}
 	
-	public void dissmissDialog(int id) {
+	public void dismissDialog(int id) {
 		AlertDialog dialog = _dialogs.get(id);
 		if(dialog == null) {
 			return;
@@ -241,8 +241,8 @@ public class DialogManager {
 		return DialogManager.getInstance().showSubmitDialog(title, msg);
 	}
 	
-	public static void DissmissDialog(int id) {
-		DialogManager.getInstance().dissmissDialog(id);
+	public static void DismissDialog(int id) {
+		DialogManager.getInstance().dismissDialog(id);
 	}
 	
 	public static void SetLabel(String decide, String cancel, String close) {

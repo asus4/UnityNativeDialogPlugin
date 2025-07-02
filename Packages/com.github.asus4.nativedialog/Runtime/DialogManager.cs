@@ -125,9 +125,9 @@ namespace NativeDialog
             return id;
         }
 
-        public static void Dissmiss(int id)
+        public static void Dismiss(int id)
         {
-            Instance.dialog.Dissmiss(id);
+            Instance.dialog.Dismiss(id);
 
             var callbacks = Instance.callbacks;
             if (callbacks.ContainsKey(id))
