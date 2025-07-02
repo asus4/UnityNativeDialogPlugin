@@ -1,15 +1,22 @@
 {
-    "name": "com.github.asus4.nativedialog",
-    "displayName": "Native Dialog",
-    "author": "Koki Ibukuro",
-    "description": "Native Dialog Plugin for Unity",
-    "keywords": [
-      "unity"
-    ],
-    "license": "SEE LICENSE IN LICENSE",
-    "unity": "2020.3",
-    "unityRelease": "0f1",
-    "version": "1.1.0",
-    "type": "library",
-    "hideInEditor": false
+  "name": "com.github.asus4.nativedialog",
+  "version": "1.1.0",
+  "displayName": "Native Dialog",
+  "description": "Android / iOS Native Dialog for Unity",
+  "keywords": [
+    "unity"
+  ],
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asus4/UnityNativeDialogPlugin.git"
+  },
+  "documentationUrl": "https://github.com/asus4/UnityNativeDialogPlugin",
+  "changelogUrl": "https://github.com/asus4/UnityNativeDialogPlugin/releases",
+  "licensesUrl": "https://github.com/asus4/UnityNativeDialogPlugin/blob/main/LICENSE",
+  "author": {
+    "name": "Koki Ibukuro",
+    "url": "https://github.com/asus4"
   }
+}
